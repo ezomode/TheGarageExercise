@@ -10,6 +10,7 @@ class Level {
     private final int levelNumber;
     private final List<ParkingSpace> freeParkingSpaces;
     private final Map<UUID, ParkingSpace> occupiedSpacesMap;
+    private int maxAllocatedSpaces = 1;
 
     Level(int capacity, int levelNumber) {
         this.capacity = capacity;
@@ -18,9 +19,9 @@ class Level {
         occupiedSpacesMap = new HashMap<>();
 
         // Todo: optimize.
-        IntStream.range(0, capacity).forEach(i -> {
-            freeParkingSpaces.add(new ParkingSpace(levelNumber, i));
-        });
+        IntStream.range(0, maxAllocatedSpaces).forEach(
+                i -> freeParkingSpaces.add(new ParkingSpace(levelNumber, i))
+        );
     }
 
     public Map<UUID, ParkingSpace> getOccupiedSpacesMap() {
@@ -32,7 +33,7 @@ class Level {
     }
 
     public boolean isFull() {
-        return freeParkingSpaces.size() < 1 || occupiedSpacesMap.size() >= capacity;
+        return (freeParkingSpaces.size() < 1 && maxAllocatedSpaces == capacity) || occupiedSpacesMap.size() >= capacity;
     }
 
     public boolean remove(Vehicle vehicle) {
@@ -53,9 +54,27 @@ class Level {
             return false;
         }
 
+        if (freeParkingSpaces.isEmpty() && maxAllocatedSpaces < capacity) {
+            generateMoreFreeSpaces();
+        }
+
         ParkingSpace parkingSpace = freeParkingSpaces.remove(0);
         occupiedSpacesMap.put(vehicle.getUuid(), parkingSpace);
 
         return true;
+    }
+
+    private void generateMoreFreeSpaces() {
+        int nextIncrement = maxAllocatedSpaces * 2;
+
+        if (nextIncrement > capacity) {
+            nextIncrement = capacity;
+        }
+
+        IntStream.range(maxAllocatedSpaces, nextIncrement).forEach(
+                i -> freeParkingSpaces.add(new ParkingSpace(levelNumber, i))
+        );
+
+        maxAllocatedSpaces = nextIncrement;
     }
 }
