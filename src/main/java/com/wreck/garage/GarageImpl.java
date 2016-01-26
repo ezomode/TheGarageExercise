@@ -33,9 +33,9 @@ public class GarageImpl implements Garage {
         sparseLevels = new HashMap<>();
         packedLevels = new HashMap<>();
 
-        IntStream.range(0, levelsNumber).forEach(i -> {
-            sparseLevels.put(i, new Level(levelCapacity, i));
-        });
+        IntStream.range(0, levelsNumber).forEach(
+                i -> sparseLevels.put(i, new Level(levelCapacity, i))
+        );
     }
 
     public static Garage create(int levelsNumber, int levelCapacity) {
@@ -83,6 +83,7 @@ public class GarageImpl implements Garage {
 
         sparseLevels.computeIfPresent(levelNumber, (key, level) -> {
             level.remove(vehicle);
+
             return level;
         });
 
