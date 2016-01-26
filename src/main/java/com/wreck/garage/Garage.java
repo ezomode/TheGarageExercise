@@ -1,4 +1,4 @@
-package com.wreck.garage.one;
+package com.wreck.garage;
 
 import com.wreck.model.Vehicle;
 

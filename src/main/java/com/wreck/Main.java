@@ -1,7 +1,7 @@
 package com.wreck;
 
-import com.wreck.garage.one.Garage;
-import com.wreck.garage.one.GarageImpl;
+import com.wreck.garage.Garage;
+import com.wreck.garage.GarageImpl;
 import com.wreck.model.Car;
 import com.wreck.model.Motorbike;
 
